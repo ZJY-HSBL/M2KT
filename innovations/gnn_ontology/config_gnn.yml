@@ -1,0 +1,40 @@
+# GNNLAMRG Configuration (Direction 4)
+# GNN + structured medical ontology enhancement
+
+_BASE_: "../../config/iu_resnet.yml"
+
+# ---- Experiment ----
+expe_name: "gnn_lamrg_v1"
+version: 400
+
+# ---- Ontology ----
+ontology_source: "builtin"      # builtin | path/to/ontology.json
+graph_reg_weight: 0.01          # Graph adjacency regularization
+fusion_decision_weight: 0.01    # Fusion gating decision loss
+
+# ---- GNN ----
+gnn_heads: 4                    # GAT attention heads
+num_memory_heads: 8             # Memory attention heads
+
+# ---- Training ----
+label_loss: true
+rank_loss: true
+epochs: 50
+batch_size: 16
+lr_ed: 0.0001
+lr_ve: 0.00001
+grad_clip: 5.0
+early_stop: 10
+monitor_mode: "max"
+monitor_metric: "BLEU_4"
+
+# ---- Model Architecture ----
+d_model: 512
+d_ff: 2048
+d_vf: 2048
+num_heads: 8
+num_layers: 3
+num_slots: 64
+dropout: 0.1
+N_enc: 3
+N_dec: 3

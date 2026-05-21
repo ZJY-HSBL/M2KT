@@ -1,0 +1,46 @@
+# MLLM-LAMRG Configuration (Direction 1)
+# Medical VLM-augmented model with hierarchical evolvable knowledge base
+
+_BASE_: "../../config/iu_resnet.yml"
+
+# ---- Experiment ----
+expe_name: "mllm_lamrg_v1"
+version: 100
+
+# ---- Medical VLM ----
+vlm_type: "biomedclip"        # biomedclip | biovil | chexzero | cnn
+freeze_vlm: true               # Freeze VLM backbone during training
+visual_extractor_pretrained: "" # Override: VLM handles its own pretraining
+
+# ---- Hierarchical Memory ----
+num_slots: 256                 # Instance-level memory slots
+num_cross_slots: 32            # Cross-disease association slots
+num_memory_heads: 8            # Separate attention heads for memory ops
+
+# ---- Training ----
+label_loss: true
+rank_loss: true
+epochs: 50
+batch_size: 16                 # Reduced due to VLM memory footprint
+lr_ed: 0.0001                  # Learning rate for encoder-decoder
+lr_ve: 0.00001                 # Lower LR for VLM fine-tuning
+
+# ---- Model Architecture ----
+d_model: 512
+d_ff: 2048
+d_vf: 2048
+num_heads: 8
+num_layers: 3
+dropout: 0.1
+N_enc: 3
+N_dec: 3
+
+# ---- Optimization ----
+optim: "adam"
+lr_scheduler: "step"
+step_size: 10
+gamma: 0.8
+grad_clip: 5.0
+early_stop: 10
+monitor_mode: "max"
+monitor_metric: "BLEU_4"

@@ -1,0 +1,47 @@
+# GroundingLAMRG Configuration (Direction 3)
+# Explainable report generation with evidence grounding and uncertainty
+
+_BASE_: "../../config/iu_resnet.yml"
+
+# ---- Experiment ----
+expe_name: "grounding_lamrg_v1"
+version: 300
+
+# ---- Grounding ----
+use_bbox_supervision: false     # Weak bbox supervision (requires CheXpert-labeler)
+grounding_weight: 0.1           # Weight for grounding loss
+smoothness_weight: 0.01         # Spatial smoothness regularization
+contrastive_weight: 0.1         # Contrastive grounding weight
+
+# ---- Spatial Attention ----
+patch_size: 32                  # Vision encoder patch size
+image_size: [224, 224]          # Input image size
+
+# ---- Uncertainty ----
+mc_samples: 10                  # Monte Carlo Dropout samples
+
+# ---- Memory ----
+num_slots: 64
+num_memory_heads: 8
+
+# ---- Training ----
+label_loss: true
+rank_loss: true
+epochs: 50
+batch_size: 16
+lr_ed: 0.0001
+lr_ve: 0.00001
+grad_clip: 5.0
+early_stop: 10
+monitor_mode: "max"
+monitor_metric: "BLEU_4"
+
+# ---- Model Architecture ----
+d_model: 512
+d_ff: 2048
+d_vf: 2048
+num_heads: 8
+num_layers: 3
+dropout: 0.1
+N_enc: 3
+N_dec: 3
