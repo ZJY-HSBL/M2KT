@@ -11,6 +11,7 @@ from modules.optimizers import build_optimizer, build_lr_scheduler
 from modules.trainer import Trainer
 from modules.loss import compute_loss
 import models
+from models.baseline import LAMRGModel as BaselineModel
 from config import opts
 
 
@@ -35,9 +36,16 @@ def main():
     test_dataloader = LADataLoader(args, tokenizer, split='test', shuffle=False)
 
     # build model architecture
-    model_name = f"LAMRGModel_v{args.version}"
+    if str(args.version) == "900":
+        model_name = "BaselineModel"
+        model = BaselineModel(args, tokenizer)
+    else:
+        model_name = f"LAMRGModel_v{args.version}"
+        model_cls = getattr(models, model_name, None)
+        if model_cls is None:
+            raise ValueError(f"Unsupported model version: {args.version}")
+        model = model_cls(args, tokenizer)
     logging.info(f"Model name: {model_name} \tModel Layers:{args.num_layers}")
-    model = getattr(models, model_name)(args, tokenizer)
 
     # get function handles of loss and metrics
     criterion = compute_loss

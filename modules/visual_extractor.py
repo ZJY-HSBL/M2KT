@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 import torch.nn.functional as F
-from .efficientnet_pytorch.model import EfficientNet
+from efficientnet_pytorch import EfficientNet
 
 class DenseNet121(nn.Module):
     """Model modified.
@@ -11,9 +11,10 @@ class DenseNet121(nn.Module):
     except the classifier layer which has an additional sigmoid function.
 
     """
-    def __init__(self, out_size):
+    def __init__(self, out_size, pretrained=True):
         super(DenseNet121, self).__init__()
-        self.densenet121 = models.densenet121(pretrained=True)
+        weights = models.DenseNet121_Weights.DEFAULT if pretrained else None
+        self.densenet121 = models.densenet121(weights=weights)
         num_ftrs = self.densenet121.classifier.in_features
         self.densenet121.classifier = nn.Sequential(
             nn.Linear(num_ftrs, out_size),
@@ -34,14 +35,15 @@ class VisualExtractor(nn.Module):
         self.args = args
         print(f"=> creating model '{args.visual_extractor}'")
         if args.visual_extractor == 'densenet':
-            self.model = DenseNet121(args.num_labels)
+            self.model = DenseNet121(args.num_labels, args.visual_extractor_pretrained)
             self.avg_fnt = torch.nn.AvgPool2d(kernel_size=7, stride=1, padding=0)
         elif args.visual_extractor == 'efficientnet':
             self.model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=args.num_labels)
         elif 'resnet' in args.visual_extractor:
             self.visual_extractor = args.visual_extractor
             self.pretrained = args.visual_extractor_pretrained
-            model = getattr(models, self.visual_extractor)(pretrained=self.pretrained)
+            weights = models.ResNet101_Weights.DEFAULT if self.pretrained else None
+            model = models.resnet101(weights=weights)
             modules = list(model.children())[:-2]
             self.model = nn.Sequential(*modules)
             self.avg_fnt = torch.nn.AvgPool2d(kernel_size=7, stride=1, padding=0)

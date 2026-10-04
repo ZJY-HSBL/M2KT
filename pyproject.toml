@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "m2kt"
+version = "1.0.0"
+description = "Multi-modal knowledge transfer for radiology report generation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.1",
+  "torchvision>=0.16",
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "Pillow>=10.0",
+  "PyYAML>=6.0",
+  "yacs>=0.1.8",
+  "tqdm>=4.66",
+  "tensorboardX>=2.6",
+  "pycocoevalcap>=1.2",
+  "efficientnet-pytorch>=0.7.1"
+]
+
+[tool.setuptools.packages.find]
+include = ["config*", "innovations*", "misc*", "models*", "modules*"]

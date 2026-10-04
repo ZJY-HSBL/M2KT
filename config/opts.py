@@ -15,7 +15,7 @@ def parse_opt(prefix=None):
                         help='the path to the directory containing the data.')
     parser.add_argument('--ann_path', type=str, default='data/iu_xray/annotation.json',
                         help='the path to the directory containing the data.')
-    parser.add_argument('--label_path', type=str, default='/home/shuxinyang/data/mimic/finding/chexpert_labeled.csv',
+    parser.add_argument('--label_path', type=str, default='',
                         help='the path to the directory containing the label.')
     parser.add_argument('--image_size', type=int, default=256, help='')
     parser.add_argument('--crop_size', type=int, default=224, help='')
@@ -29,7 +29,7 @@ def parse_opt(prefix=None):
     parser.add_argument('--batch_size', type=int, default=16, help='the number of samples for a batch')
 
     # Model settings (for visual extractor)
-    parser.add_argument('-v', '--version', type=str, default="0", help='main model version')
+    parser.add_argument('-v', '--version', type=str, default="12", help='model version; use 900 for the pure Transformer baseline')
     parser.add_argument('--visual_extractor', type=str, default='resnet101',
                         choices=['densenet', 'efficientnet', 'resnet101'],
                         help='the visual extractor to be used.')
@@ -183,29 +183,3 @@ def parse_opt(prefix=None):
 
     return args
 
-
-def add_eval_options(parser):
-    pass
-
-def add_diversity_opts(parser):
-    pass
-
-
-# Sampling related options
-def add_eval_sample_opts(parser):
-    pass
-
-
-if __name__ == '__main__':
-    import sys
-    sys.argv = [sys.argv[0]]
-    args = parse_opt()
-    print(args)
-    print()
-    sys.argv = [sys.argv[0], '--cfg', 'covid.yml']
-    args1 = parse_opt()
-    print(dict(set(vars(args1).items()) - set(vars(args).items())))
-    print()
-    sys.argv = [sys.argv[0], '--cfg', 'covid.yml', '--visual_extractor', 'densenet']
-    args2 = parse_opt()
-    print(dict(set(vars(args2).items()) - set(vars(args1).items())))

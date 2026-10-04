@@ -125,7 +125,6 @@ X光图像 → 视觉提取器(CNN) → 图像特征 + 标签预测
 │   ├── metrics.py                   # 评价指标（BLEU 1~4、ROUGE-L、CIDEr、METEOR）
 │   ├── optimizers.py                # 优化器和学习率调度器
 │   ├── utils.py                     # 解码辅助工具
-│   └── efficientnet_pytorch/        # 内置 EfficientNet 实现
 │
 ├── misc/
 │   └── utils.py                     # 日志设置与图像归一化
@@ -138,9 +137,9 @@ X光图像 → 视觉提取器(CNN) → 图像特征 + 标签预测
 │   └── temporal_progression/        # [5] 时序疾病进展建模
 │
 ├── main.py                          # 入口：完整模型（含知识库）
-├── main_basic.py                    # 入口：基础 Transformer 基线
-├── main_label_feature.py            # 入口：标签特征注入
-├── mainbaseline.py                  # 入口：最小基线
+├── main.py                    # 入口：基础 Transformer 基线
+├── main.py            # 入口：标签特征注入
+├── main.py                  # 入口：最小基线
 ├── README.md                        # 英文文档
 └── README_CN.md                     # 中文文档（本文件）
 ```
@@ -163,6 +162,14 @@ X光图像 → 视觉提取器(CNN) → 图像特征 + 标签预测
 | pycocoevalcap | — | MS COCO 评价指标工具包 |
 | CheXpert-labeler | — | 外部标签提取工具 |
 | transformers | 可选（方向一） | BiomedCLIP/BioViL 集成 |
+
+## 安装
+
+```bash
+python -m pip install -e .
+```
+
+训练统一从 `main.py` 进入；`--version 900` 对应纯 Transformer 基线，其余编号对应 LAMRG 系列模型。
 
 ## 数据准备
 
@@ -189,7 +196,7 @@ python main.py --cfg config/iu_resnet.yml --expe_name 实验名称 \
                --label_loss --rank_loss --version 12
 
 # 基础 Transformer 基线
-python main_basic.py --cfg config/iu_resnet.yml --expe_name 实验名称 \
+python main.py --cfg config/iu_resnet.yml --expe_name 实验名称 \
                      --label_loss --rank_loss --version 91
 
 # 消融：无自学习知识库

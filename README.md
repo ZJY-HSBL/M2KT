@@ -125,7 +125,6 @@ Models disease evolution by processing paired longitudinal chest X-rays from the
 │   ├── metrics.py                   # BLEU 1-4, ROUGE-L, CIDEr, METEOR
 │   ├── optimizers.py                # Optimizer and LR scheduler builders
 │   ├── utils.py                     # Decoding utilities
-│   └── efficientnet_pytorch/        # Bundled EfficientNet implementation
 │
 ├── misc/
 │   └── utils.py                     # Logging setup and image normalization
@@ -138,9 +137,6 @@ Models disease evolution by processing paired longitudinal chest X-rays from the
 │   └── temporal_progression/        # [5] Temporal disease progression
 │
 ├── main.py                          # Entry: full model with knowledge base
-├── main_basic.py                    # Entry: basic Transformer baseline
-├── main_label_feature.py            # Entry: label feature injection
-├── mainbaseline.py                  # Entry: minimal baseline
 ├── README.md                        # English documentation
 └── README_CN.md                     # Chinese documentation
 ```
@@ -163,6 +159,14 @@ Models disease evolution by processing paired longitudinal chest X-rays from the
 | pycocoevalcap | — | MS COCO evaluation metrics |
 | CheXpert-labeler | — | External label extraction |
 | transformers | optional (Dir 1) | BiomedCLIP/BioViL integration |
+
+## Installation
+
+```bash
+python -m pip install -e .
+```
+
+`main.py` is the only training entry point. Use `--version 900` for the pure Transformer baseline and the numbered LAMRG variants for the remaining experiments.
 
 ## Data Preparation
 
@@ -189,8 +193,7 @@ python main.py --cfg config/iu_resnet.yml --expe_name experiment_name \
                --label_loss --rank_loss --version 12
 
 # Basic Transformer baseline
-python main_basic.py --cfg config/iu_resnet.yml --expe_name experiment_name \
-                     --label_loss --rank_loss --version 91
+python main.py --cfg config/iu_resnet.yml --expe_name baseline --version 900
 
 # Ablation: without learned knowledge base
 python main.py --cfg config/iu_resnet.yml --expe_name experiment_name \
