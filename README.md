@@ -147,9 +147,9 @@ Models disease evolution by processing paired longitudinal chest X-rays from the
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| Python | >= 3.8 | Runtime |
-| PyTorch | >= 1.7 | Deep learning framework |
-| torchvision | — | Pretrained CNN models |
+| Python | >= 3.10 | Runtime |
+| PyTorch | >= 2.1 | Deep learning framework |
+| torchvision | >= 0.16 | Pretrained CNN models |
 | tensorboardX | — | Training visualization |
 | tqdm | — | Progress bars |
 | numpy | — | Numerical computation |
@@ -167,6 +167,19 @@ python -m pip install -e .
 ```
 
 `main.py` is the only training entry point. Use `--version 900` for the pure Transformer baseline and the numbered LAMRG variants for the remaining experiments.
+
+## Verification
+
+The repository includes a lightweight CI baseline for every pull request and push to `main`. It verifies Python syntax across the research modules and runs dataset-free configuration smoke tests on Python 3.10, 3.11, and 3.12.
+
+```bash
+python -m pip install -e ".[dev]"
+pytest
+```
+
+The lightweight CI deliberately does not download medical datasets, pretrained checkpoints, or execute full GPU training. End-to-end training and benchmark reproduction remain explicit research runs.
+
+---
 
 ## Data Preparation
 
