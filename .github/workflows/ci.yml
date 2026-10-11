@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lightweight-verification:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install lightweight verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest PyYAML yacs
+          python -m pip install --no-deps -e .
+
+      - name: Compile Python sources
+        run: python -m compileall -q config innovations misc models modules
+
+      - name: Run smoke tests
+        run: pytest
